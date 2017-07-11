@@ -63,7 +63,7 @@ app.get('/blogs/new', (req, res) => {
 	res.render('new')
 });
 
-// Create route
+// CREATE route
 app.post('/blogs', (req, res) => {
 	// create blog
 	Blog.create(req.body.blog, (err, newBlog) => {
@@ -74,6 +74,17 @@ app.post('/blogs', (req, res) => {
 		}
 	})
 	// redirect
+})
+
+// SHOW route
+app.get('/blogs/:id', (req, res) => {
+	Blog.findById(req.params.id, (err, foundBlog) => {
+		if(err) {
+			res.redirect('/blogs');
+		} else {
+			res.render('show', {blog: foundBlog});
+		}
+	})
 })
 
 
