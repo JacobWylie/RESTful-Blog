@@ -2,16 +2,12 @@
 // Dependencies
 ///////////////////////////
 
-const express    	  = require('express'),
-	  app 	     	  = express(),
-	  bodyParser 	  = require('body-parser'),
-	  mongoose   	  = require('mongoose'),
-	  methodOverride = require('method-override');
-
-
-///////////////////////////
-//	MIDDLEWARE
-///////////////////////////
+const express    	   = require('express'),
+	  app 	     	   = express(),
+	  bodyParser 	   = require('body-parser'),
+	  mongoose   	   = require('mongoose'),
+	  methodOverride   = require('method-override'),
+	  expressSanitizer = require('express-sanitizer');
 
 // Connect to local db
 mongoose.connect('mongodb://localhost/restful_blog', {useMongoClient: true});
@@ -23,6 +19,8 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 // Override POST request to PUT in HTML form
 app.use(methodOverride('_method'));
+// Remove scripts from HTML in form submissions
+app.use(expressSanitizer());
 
 
 ///////////////////////////
@@ -68,7 +66,8 @@ app.get('/blogs/new', (req, res) => {
 
 // CREATE route
 app.post('/blogs', (req, res) => {
-	// create blog
+	// sanitize <script> from form submit
+	req.body.blog.body = req.sanitize(req.body.blog.body);
 	Blog.create(req.body.blog, (err, newBlog) => {
 		if(err) {
 			res.render('new');
@@ -76,7 +75,6 @@ app.post('/blogs', (req, res) => {
 			res.redirect('/blogs');
 		}
 	})
-	// redirect
 })
 
 // SHOW route
@@ -103,6 +101,8 @@ app.get('/blogs/:id/edit', (req, res) => {
 
 // UPDATE route
 app.put('/blogs/:id', (req, res) => {
+	// sanitize <script> from form submit
+	req.body.blog.body = req.sanitize(req.body.blog.body);
 	Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updatedBlog) => {
 		if(err) {
 			res.redirect('/blogs');
