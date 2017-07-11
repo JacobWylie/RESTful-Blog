@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/JacobWylie/RESTful-Blog/issues"
   },
-  "homepage": "https://github.com/JacobWylie/RESTful-Blog#readme"
+  "homepage": "https://github.com/JacobWylie/RESTful-Blog#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongoose": "^4.11.1"
+  }
 }
