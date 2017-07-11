@@ -8,15 +8,15 @@
 				<div class="content">
 					<span><%= blog.created.toDateString() %></span>
 				</div>
-				<div class="description">
+				<div class="description show-body">
 					<p><%- blog.body %></p>
 				</div>
 				<a href="/blogs/<%= blog._id %>/edit">
-					<button class="ui orange basic button">Edit Post</button>
+					<button class="ui orange basic button">Edit</button>
 				</a>
 				<!-- method-override to DELETE -->
 				<form id="delete" action="/blogs/<%= blog._id %>?_method=DELETE" method="POST">
-					<button class="ui red basic button">DELETE</button>
+					<button class="ui red basic button">Delete</button>
 				</form>
 			</div>
 		</div>

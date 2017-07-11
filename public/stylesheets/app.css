@@ -1,9 +1,18 @@
-i.icon {
+.header i.icon {
 	font-size: 2em;
 }
 
 .ui.main {
 	margin-top: 7.0em;
+}
+
+.ui.centered.rounded.image {
+	margin-top: 30px;
+	margin-bottom: 50px;
+}
+
+.show-body {
+	margin-bottom: 30px;
 }
 
 #delete {
