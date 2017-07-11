@@ -107,9 +107,22 @@ app.put('/blogs/:id', (req, res) => {
 		if(err) {
 			res.redirect('/blogs');
 		} else {
-			res.redirect(`/blogs/${req.params.id}`)
+			res.redirect(`/blogs/${req.params.id}`);
 		}
 	})
+})
+
+// DELETE route
+app.delete('/blogs/:id', (req, res) => {
+	// destroy blog
+	Blog.findByIdAndRemove(req.params.id, err => {
+		if(err) {
+			res.redirect('/blogs');
+		} else {
+			res.redirect('/blogs');
+		}
+	})
+	//redirect
 })
 
 
