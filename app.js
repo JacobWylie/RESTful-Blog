@@ -2,10 +2,11 @@
 // Dependencies
 ///////////////////////////
 
-const express    = require('express'),
-	  app 	     = express(),
-	  bodyParser = require('body-parser'),
-	  mongoose   = require('mongoose');
+const express    	  = require('express'),
+	  app 	     	  = express(),
+	  bodyParser 	  = require('body-parser'),
+	  mongoose   	  = require('mongoose'),
+	  methodOverride = require('method-override');
 
 
 ///////////////////////////
@@ -20,6 +21,8 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 // Parse data through POST forms
 app.use(bodyParser.urlencoded({extended: true}));
+// Override POST request to PUT in HTML form
+app.use(methodOverride('_method'));
 
 
 ///////////////////////////
@@ -83,6 +86,28 @@ app.get('/blogs/:id', (req, res) => {
 			res.redirect('/blogs');
 		} else {
 			res.render('show', {blog: foundBlog});
+		}
+	})
+})
+
+// EDIT route
+app.get('/blogs/:id/edit', (req, res) => {
+	Blog.findById(req.params.id, (err, foundBlog) => {
+		if(err) {
+			res.redirect('/blogs');
+		} else {
+			res.render('edit', {blog: foundBlog});
+		}
+	})
+})
+
+// UPDATE route
+app.put('/blogs/:id', (req, res) => {
+	Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updatedBlog) => {
+		if(err) {
+			res.redirect('/blogs');
+		} else {
+			res.redirect(`/blogs/${req.params.id}`)
 		}
 	})
 })
