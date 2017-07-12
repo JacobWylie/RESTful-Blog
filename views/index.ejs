@@ -20,7 +20,7 @@
 						</div>
 						<div class="description">
 							<p>
-								<%	if (blog.body !== undefined) { %>
+								<%	if (blog.body !== undefined && blog.body !== null) { %>
 									<%- blog.body.substring(0, 100) %>...
 								<% } %>	
 							</p>
