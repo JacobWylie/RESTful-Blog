@@ -10,9 +10,10 @@ const express    	   = require('express'),
 	  expressSanitizer = require('express-sanitizer'),
 	  request          = require('request'),
 	  server           = require('http').Server(app),
+	  // Allows Heroku to set port
 	  port             = process.env.PORT || 8000;
 
-// Connect to local db
+// Connect to mLab db - sandbox free tier
 mongoose.connect('mongodb://heroku_s25v6880:q8lvfeu1097soh3etk5vi057cv@ds153652.mlab.com:53652/heroku_s25v6880', {useMongoClient: true});
 // Use ejs templating
 app.set('view engine', 'ejs');
@@ -147,6 +148,7 @@ app.get('*', (req, res) => {
 // HEROKU SERVER
 ///////////////////////////
 
+// Allows Heroku to set port
 server.listen(port, function() {
     console.log("App is running on port " + port);
 });
