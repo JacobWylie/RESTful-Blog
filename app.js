@@ -7,7 +7,10 @@ const express    	   = require('express'),
 	  bodyParser 	   = require('body-parser'),
 	  mongoose   	   = require('mongoose'),
 	  methodOverride   = require('method-override'),
-	  expressSanitizer = require('express-sanitizer');
+	  expressSanitizer = require('express-sanitizer'),
+	  request 		   = require('request'),
+	  server 		   = require('http').Server(app),
+	  port 	 		   = process.env.PORT || 8000;
 
 // Connect to local db
 mongoose.connect('mongodb://localhost/restful_blog', {useMongoClient: true});
@@ -126,15 +129,27 @@ app.delete('/blogs/:id', (req, res) => {
 })
 
 
+app.get('*', (req, res) => {
+	res.redirect('/blogs')
+})
+
+
 ///////////////////////////
 // LOCAL DEV SERVER
 ///////////////////////////
 
-app.listen(3000, () => {
-	console.log('App running on localhost:3000');
-})
+// app.listen(3000, () => {
+// 	console.log('App running on localhost:3000');
+// })
 
 
+///////////////////////////
+// HEROKU SERVER
+///////////////////////////
+
+server.listen(port, function() {
+    console.log("App is running on port " + port);
+});
 
 
 
