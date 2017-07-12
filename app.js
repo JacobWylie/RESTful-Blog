@@ -13,17 +13,17 @@ const express    	   = require('express'),
 	  // Allows Heroku to set port
 	  port             = process.env.PORT || 8000;
 
-// Connect to mLab db - sandbox free tier
+// Connects to mLab db - sandbox free tier
 mongoose.connect('mongodb://heroku_s25v6880:q8lvfeu1097soh3etk5vi057cv@ds153652.mlab.com:53652/heroku_s25v6880', {useMongoClient: true});
-// Use ejs templating
+// Uses ejs templating
 app.set('view engine', 'ejs');
-// Serve css and js files from /public
+// Serves css and js files from /public
 app.use(express.static('public'));
-// Parse data through POST forms
+// Parses data through forms
 app.use(bodyParser.urlencoded({extended: true}));
-// Override POST request to PUT in HTML form
+// Overrides POST request to PUT/DELETE in HTML form | No such method in HTML 5 yet
 app.use(methodOverride('_method'));
-// Remove scripts from HTML in form submissions
+// Removes <script> from HTML in form submissions for HTML markup in blog posts
 app.use(expressSanitizer());
 
 
@@ -51,27 +51,30 @@ app.get('/', (req, res) => {
 	res.redirect('/blogs');
 })
 
-// INDEX route
+// INDEX route -> home/displays all blog posts
 app.get('/blogs', (req, res) => {
+	// Retrieve all blog posts from db
 	Blog.find({}, (err, blogs) => {
 		if(err) {
-			console.log('error')
+			res.redirect('/blogs')
 		} else {
+			// Send posts to /index | array blogs[]
 			res.render('index', {blogs: blogs});
 		}
 	})
 
 })
 
-// NEW route
+// NEW route -> new blog post form
 app.get('/blogs/new', (req, res) => {
 	res.render('new')
 });
 
-// CREATE route
+// CREATE route -> new blog post to db -> redirect back to index
 app.post('/blogs', (req, res) => {
-	// sanitize <script> from form submit
+	// Removes <script> from form submit HTML markup in blog content
 	req.body.blog.body = req.sanitize(req.body.blog.body);
+	// Creates new blog post in db as mongoose model
 	Blog.create(req.body.blog, (err, newBlog) => {
 		if(err) {
 			res.render('new');
@@ -81,32 +84,37 @@ app.post('/blogs', (req, res) => {
 	})
 })
 
-// SHOW route
+// SHOW route -> Particular blog post page
 app.get('/blogs/:id', (req, res) => {
+	// Retreive blog post by id
 	Blog.findById(req.params.id, (err, foundBlog) => {
 		if(err) {
 			res.redirect('/blogs');
 		} else {
+			// Send particular blog as object: 'blog'
 			res.render('show', {blog: foundBlog});
 		}
 	})
 })
 
-// EDIT route
+// EDIT route -> edit post form
 app.get('/blogs/:id/edit', (req, res) => {
+	// Retreive blog post by id
 	Blog.findById(req.params.id, (err, foundBlog) => {
 		if(err) {
 			res.redirect('/blogs');
 		} else {
+			// Fills in form with retrieved blog's data as object: 'blog'
 			res.render('edit', {blog: foundBlog});
 		}
 	})
 })
 
-// UPDATE route
+// UPDATE route -> changes blog post content and redirects to same post SHOW
 app.put('/blogs/:id', (req, res) => {
-	// sanitize <script> from form submit
+	// Removes <script> from form submit HTML markup in blog content
 	req.body.blog.body = req.sanitize(req.body.blog.body);
+	// Retreives blog by id and updates 
 	Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updatedBlog) => {
 		if(err) {
 			res.redirect('/blogs');
@@ -116,9 +124,9 @@ app.put('/blogs/:id', (req, res) => {
 	})
 })
 
-// DELETE route
+// DELETE route -> removes post from db and redirects back to index
 app.delete('/blogs/:id', (req, res) => {
-	// destroy blog
+	// Retreives blog post by id and deletes it from db
 	Blog.findByIdAndRemove(req.params.id, err => {
 		if(err) {
 			res.redirect('/blogs');
