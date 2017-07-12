@@ -8,9 +8,9 @@ const express    	   = require('express'),
 	  mongoose   	   = require('mongoose'),
 	  methodOverride   = require('method-override'),
 	  expressSanitizer = require('express-sanitizer'),
-	  request 		   = require('request'),
-	  server 		   = require('http').Server(app),
-	  port 	 		   = process.env.PORT || 8000;
+	  request          = require('request'),
+	  server           = require('http').Server(app),
+	  port             = process.env.PORT || 8000;
 
 // Connect to local db
 mongoose.connect('mongodb://heroku_s25v6880:q8lvfeu1097soh3etk5vi057cv@ds153652.mlab.com:53652/heroku_s25v6880', {useMongoClient: true});
@@ -48,6 +48,11 @@ const Blog = mongoose.model('Blog', blogSchema);
 // ROOT -> INDEX
 app.get('/', (req, res) => {
 	res.redirect('/blogs');
+})
+
+// Everywhere else leads to -> INDEX
+app.get('*', (req, res) => {
+	res.redirect('/blogs')
 })
 
 // INDEX route
@@ -126,11 +131,6 @@ app.delete('/blogs/:id', (req, res) => {
 		}
 	})
 	//redirect
-})
-
-
-app.get('*', (req, res) => {
-	res.redirect('/blogs')
 })
 
 
