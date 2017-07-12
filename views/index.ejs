@@ -14,13 +14,15 @@
 							<%= blog.title %>
 						</a>
 						<div class="meta">
-							<span>
-								<%= blog.created.toDateString() %>	
+							<span>	
+								<%= blog.created.toDateString() %>
 							</span>
 						</div>
 						<div class="description">
 							<p>
-								<%- blog.body.substring(0, 100) %>...
+								<%	if (blog.body !== undefined) { %>
+									<%- blog.body.substring(0, 100) %>...
+								<% } %>	
 							</p>
 						</div>
 						<div class="extra">

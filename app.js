@@ -50,11 +50,6 @@ app.get('/', (req, res) => {
 	res.redirect('/blogs');
 })
 
-// Everywhere else leads to -> INDEX
-app.get('*', (req, res) => {
-	res.redirect('/blogs')
-})
-
 // INDEX route
 app.get('/blogs', (req, res) => {
 	Blog.find({}, (err, blogs) => {
@@ -131,6 +126,11 @@ app.delete('/blogs/:id', (req, res) => {
 		}
 	})
 	//redirect
+})
+
+// Everywhere else leads to -> INDEX
+app.get('*', (req, res) => {
+	res.redirect('/blogs')
 })
 
 
