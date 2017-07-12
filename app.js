@@ -13,7 +13,7 @@ const express    	   = require('express'),
 	  port 	 		   = process.env.PORT || 8000;
 
 // Connect to local db
-mongoose.connect('mongodb://localhost/restful_blog', {useMongoClient: true});
+mongoose.connect('mongodb://heroku_s25v6880:q8lvfeu1097soh3etk5vi057cv@ds153652.mlab.com:53652/heroku_s25v6880', {useMongoClient: true});
 // Use ejs templating
 app.set('view engine', 'ejs');
 // Serve css and js files from /public
