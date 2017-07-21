@@ -11,7 +11,7 @@ const express    	   = require('express'),
 	  // request          = require('request'),
 	  server           = require('http').Server(app),
 	  // Allows Heroku to set port
-	  // port             = process.env.PORT || 8000;
+	  port             = process.env.PORT || 8000;
 
 // Connects to mLab db - sandbox free tier
 mongoose.connect('mongodb://heroku_s25v6880:q8lvfeu1097soh3etk5vi057cv@ds153652.mlab.com:53652/heroku_s25v6880', {useMongoClient: true});
