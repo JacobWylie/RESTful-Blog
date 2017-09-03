@@ -10,14 +10,14 @@ const express    	   = require('express'),
 	  expressSanitizer = require('express-sanitizer'),
 	  server           = require('http').Server(app),
 	  // Allows Heroku to set port
-	  port             = process.env.PORT || 8000;
+	  port             = process.env.PORT || 8082;
 
 // Connects to mLab db - sandbox free tier
 mongoose.connect(process.env.DATABASE_URL, {useMongoClient: true});
 // Uses ejs templating
 app.set('view engine', 'ejs');
 // Serves css and js files from /public
-app.use(express.static('public'));
+app.use('/blog', express.static(__dirname + '/public'));
 // Parses data through forms
 app.use(bodyParser.urlencoded({extended: true}));
 // Overrides POST request to PUT/DELETE in HTML form | No such method in HTML 5 yet
