@@ -8,13 +8,12 @@ const express    	   = require('express'),
 	  mongoose   	   = require('mongoose'),
 	  methodOverride   = require('method-override'),
 	  expressSanitizer = require('express-sanitizer'),
-	  // request          = require('request'),
 	  server           = require('http').Server(app),
 	  // Allows Heroku to set port
 	  port             = process.env.PORT || 8000;
 
 // Connects to mLab db - sandbox free tier
-mongoose.connect('mongodb://heroku_s25v6880:q8lvfeu1097soh3etk5vi057cv@ds153652.mlab.com:53652/heroku_s25v6880', {useMongoClient: true});
+mongoose.connect(process.env.DATABASE_URL, {useMongoClient: true});
 // Uses ejs templating
 app.set('view engine', 'ejs');
 // Serves css and js files from /public
@@ -47,12 +46,12 @@ const Blog = mongoose.model('Blog', blogSchema);
 ///////////////////////////
 
 // ROOT -> INDEX
-app.get('/', (req, res) => {
+app.get('/blog', (req, res) => {
 	res.redirect('/blogs');
 })
 
 // INDEX route -> home/displays all blog posts
-app.get('/blogs', (req, res) => {
+app.get('/blog/blogs', (req, res) => {
 	// Retrieve all blog posts from db
 	Blog.find({}, (err, blogs) => {
 		if(err) {
@@ -66,12 +65,12 @@ app.get('/blogs', (req, res) => {
 })
 
 // NEW route -> new blog post form
-app.get('/blogs/new', (req, res) => {
+app.get('/blog/blogs/new', (req, res) => {
 	res.render('new')
 });
 
 // CREATE route -> new blog post to db -> redirect back to index
-app.post('/blogs', (req, res) => {
+app.post('/blog/blogs', (req, res) => {
 	// Removes <script> from form submit HTML markup in blog content
 	req.body.blog.body = req.sanitize(req.body.blog.body);
 	// Creates new blog post in db as mongoose model
@@ -85,7 +84,7 @@ app.post('/blogs', (req, res) => {
 })
 
 // SHOW route -> Particular blog post page
-app.get('/blogs/:id', (req, res) => {
+app.get('/blog/blogs/:id', (req, res) => {
 	// Retreive blog post by id
 	Blog.findById(req.params.id, (err, foundBlog) => {
 		if(err) {
@@ -98,7 +97,7 @@ app.get('/blogs/:id', (req, res) => {
 })
 
 // EDIT route -> edit post form
-app.get('/blogs/:id/edit', (req, res) => {
+app.get('/blog/blogs/:id/edit', (req, res) => {
 	// Retreive blog post by id
 	Blog.findById(req.params.id, (err, foundBlog) => {
 		if(err) {
@@ -111,7 +110,7 @@ app.get('/blogs/:id/edit', (req, res) => {
 })
 
 // UPDATE route -> changes blog post content and redirects to same post SHOW
-app.put('/blogs/:id', (req, res) => {
+app.put('/blog/blogs/:id', (req, res) => {
 	// Removes <script> from form submit HTML markup in blog content
 	req.body.blog.body = req.sanitize(req.body.blog.body);
 	// Retreives blog by id and updates 
@@ -125,7 +124,7 @@ app.put('/blogs/:id', (req, res) => {
 })
 
 // DELETE route -> removes post from db and redirects back to index
-app.delete('/blogs/:id', (req, res) => {
+app.delete('/blog/blogs/:id', (req, res) => {
 	// Retreives blog post by id and deletes it from db
 	Blog.findByIdAndRemove(req.params.id, err => {
 		if(err) {
@@ -157,7 +156,7 @@ app.get('*', (req, res) => {
 ///////////////////////////
 
 // Allows Heroku to set port
-server.listen(port, function() {
+server.listen(port, () => {
     console.log("App is running on port " + port);
 });
 
