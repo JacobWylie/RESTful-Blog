@@ -13,7 +13,7 @@ const express    	   = require('express'),
 	  port             = process.env.PORT || 8082;
 
 // Connects to mLab db - sandbox free tier
-mongoose.connect('mongodb://heroku_s25v6880:q8lvfeu1097soh3etk5vi057cv@ds153652.mlab.com:53652/heroku_s25v6880' || process.env.DATABASE_URL, {useMongoClient: true});
+mongoose.connect(process.env.DATABASE_URL, {useMongoClient: true});
 // Uses ejs templating
 app.set('view engine', 'ejs');
 // Serves css and js files from /public
@@ -55,7 +55,7 @@ app.get('/blog/blogs', (req, res) => {
 	// Retrieve all blog posts from db
 	Blog.find({}, (err, blogs) => {
 		if(err) {
-			res.redirect('/blogs')
+			res.redirect('/blog/blogs')
 		} else {
 			// Send posts to /index | array blogs[]
 			res.render('index', {blogs: blogs});
@@ -78,7 +78,7 @@ app.post('/blog/blogs', (req, res) => {
 		if(err) {
 			res.render('new');
 		} else {
-			res.redirect('/blogs');
+			res.redirect('/blog/blogs');
 		}
 	})
 })
@@ -88,7 +88,7 @@ app.get('/blog/blogs/:id', (req, res) => {
 	// Retreive blog post by id
 	Blog.findById(req.params.id, (err, foundBlog) => {
 		if(err) {
-			res.redirect('/blogs');
+			res.redirect('/blog/blogs');
 		} else {
 			// Send particular blog as object: 'blog'
 			res.render('show', {blog: foundBlog});
@@ -101,7 +101,7 @@ app.get('/blog/blogs/:id/edit', (req, res) => {
 	// Retreive blog post by id
 	Blog.findById(req.params.id, (err, foundBlog) => {
 		if(err) {
-			res.redirect('/blogs');
+			res.redirect('/blog/blogs');
 		} else {
 			// Fills in form with retrieved blog's data as object: 'blog'
 			res.render('edit', {blog: foundBlog});
@@ -116,9 +116,9 @@ app.put('/blog/blogs/:id', (req, res) => {
 	// Retreives blog by id and updates 
 	Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updatedBlog) => {
 		if(err) {
-			res.redirect('/blogs');
+			res.redirect('/blog/blogs');
 		} else {
-			res.redirect(`/blogs/${req.params.id}`);
+			res.redirect(`/blog/blogs/${req.params.id}`);
 		}
 	})
 })
@@ -128,9 +128,9 @@ app.delete('/blog/blogs/:id', (req, res) => {
 	// Retreives blog post by id and deletes it from db
 	Blog.findByIdAndRemove(req.params.id, err => {
 		if(err) {
-			res.redirect('/blogs');
+			res.redirect('/blog/blogs');
 		} else {
-			res.redirect('/blogs');
+			res.redirect('/blog/blogs');
 		}
 	})
 	//redirect
@@ -138,7 +138,7 @@ app.delete('/blog/blogs/:id', (req, res) => {
 
 // Everywhere else leads to -> INDEX
 app.get('*', (req, res) => {
-	res.redirect('/blogs')
+	res.redirect('/blog/blogs')
 })
 
 
